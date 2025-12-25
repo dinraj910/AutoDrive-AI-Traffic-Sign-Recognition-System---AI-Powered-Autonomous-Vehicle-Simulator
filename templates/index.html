@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoDrive AI - Traffic Sign Recognition</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-car-front-fill me-2 text-primary"></i>
+                <span class="brand-text">AutoDrive<span class="text-primary">AI</span></span>
+            </a>
+            <div class="nav-info d-flex align-items-center">
+                <span class="badge bg-success me-3 pulse-badge">
+                    <i class="bi bi-circle-fill me-1"></i> System Online
+                </span>
+                <span class="text-light opacity-75">
+                    <i class="bi bi-cpu me-1"></i> CNN Model Active
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header Section -->
+        <header class="text-center py-4">
+            <h1 class="main-title">
+                <span class="title-icon"><i class="bi bi-robot"></i></span>
+                Autonomous Vehicle Simulator
+            </h1>
+            <p class="subtitle">Experience AI-Powered Traffic Sign Recognition in Real-Time</p>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <div class="container-fluid px-4">
+            <div class="row g-4">
+                <!-- Left Panel - Controls & Upload -->
+                <div class="col-lg-4">
+                    <!-- Control Panel -->
+                    <div class="glass-card mb-4">
+                        <div class="card-header-custom">
+                            <i class="bi bi-gear-wide-connected"></i>
+                            <span>Vehicle Control</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="control-buttons">
+                                <button id="startBtn" class="btn-control btn-start" onclick="startCar()">
+                                    <i class="bi bi-play-fill"></i>
+                                    <span>START ENGINE</span>
+                                </button>
+                                <button id="stopBtn" class="btn-control btn-stop" onclick="stopCar()" disabled>
+                                    <i class="bi bi-stop-fill"></i>
+                                    <span>STOP</span>
+                                </button>
+                            </div>
+                            <div class="engine-status mt-3">
+                                <div class="status-indicator" id="engineStatus">
+                                    <span class="status-dot"></span>
+                                    <span class="status-text">Engine Off</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Panel -->
+                    <div class="glass-card">
+                        <div class="card-header-custom">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <span>Traffic Sign Scanner</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                                <div class="upload-zone" id="dropZone">
+                                    <div class="upload-content">
+                                        <i class="bi bi-signpost-2 upload-icon"></i>
+                                        <p class="upload-text">Drop traffic sign here</p>
+                                        <p class="upload-subtext">or click to browse</p>
+                                        <input type="file" name="image" id="imageInput" accept="image/*" required hidden>
+                                    </div>
+                                    <div class="upload-preview" id="previewContainer" style="display: none;">
+                                        <img id="imagePreview" src="" alt="Preview">
+                                        <button type="button" class="btn-remove" onclick="removeImage()">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-analyze" id="analyzeBtn" disabled>
+                                    <i class="bi bi-cpu"></i>
+                                    <span>ANALYZE SIGN</span>
+                                    <div class="btn-glow"></div>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sign Legend -->
+                    <div class="glass-card mt-4">
+                        <div class="card-header-custom">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Recognized Signs</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="sign-legend">
+                                <div class="legend-item warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <span>Cattle, Narrow Road/Bridge</span>
+                                </div>
+                                <div class="legend-item danger">
+                                    <i class="bi bi-sign-stop-fill"></i>
+                                    <span>No Entry</span>
+                                </div>
+                                <div class="legend-item info">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                    <span>Give Way, Turn Restrictions</span>
+                                </div>
+                                <div class="legend-item success">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Speed Limit 90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Panel - Road & Car Animation -->
+                <div class="col-lg-5">
+                    <div class="glass-card road-card">
+                        <div class="card-header-custom">
+                            <i class="bi bi-broadcast"></i>
+                            <span>Live Simulation</span>
+                            <span class="live-indicator">
+                                <span class="live-dot"></span> LIVE
+                            </span>
+                        </div>
+                        <div class="simulation-container">
+                            <!-- Sky & Environment -->
+                            <div class="environment">
+                                <div class="sun"></div>
+                                <div class="clouds">
+                                    <div class="cloud cloud-1"></div>
+                                    <div class="cloud cloud-2"></div>
+                                    <div class="cloud cloud-3"></div>
+                                </div>
+                                <div class="mountains">
+                                    <div class="mountain mountain-1"></div>
+                                    <div class="mountain mountain-2"></div>
+                                    <div class="mountain mountain-3"></div>
+                                </div>
+                                <div class="trees">
+                                    <div class="tree tree-1"></div>
+                                    <div class="tree tree-2"></div>
+                                    <div class="tree tree-3"></div>
+                                    <div class="tree tree-4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Road -->
+                            <div class="road">
+                                <div class="road-lines" id="roadLines">
+                                    <div class="road-line"></div>
+                                    <div class="road-line"></div>
+                                    <div class="road-line"></div>
+                                    <div class="road-line"></div>
+                                    <div class="road-line"></div>
+                                </div>
+                                <div class="road-edge left"></div>
+                                <div class="road-edge right"></div>
+                            </div>
+
+                            <!-- Traffic Sign Display -->
+                            <div class="sign-post" id="signPost">
+                                <div class="sign-board" id="signBoard">
+                                    <i class="bi bi-question-lg"></i>
+                                </div>
+                                <div class="sign-pole"></div>
+                            </div>
+
+                            <!-- Car -->
+                            <div class="car-container" id="carContainer">
+                                <div class="car" id="car">
+                                    <div class="car-body">
+                                        <div class="car-top"></div>
+                                        <div class="car-middle"></div>
+                                        <div class="car-bottom"></div>
+                                        <div class="car-window front"></div>
+                                        <div class="car-window back"></div>
+                                        <div class="headlight left"></div>
+                                        <div class="headlight right"></div>
+                                        <div class="taillight left"></div>
+                                        <div class="taillight right"></div>
+                                    </div>
+                                    <div class="wheel front">
+                                        <div class="wheel-inner"></div>
+                                    </div>
+                                    <div class="wheel back">
+                                        <div class="wheel-inner"></div>
+                                    </div>
+                                    <div class="car-shadow"></div>
+                                </div>
+                                <!-- Brake Lights -->
+                                <div class="brake-lights" id="brakeLights"></div>
+                                <!-- Turn Signals -->
+                                <div class="turn-signal left" id="turnLeft"></div>
+                                <div class="turn-signal right" id="turnRight"></div>
+                            </div>
+
+                            <!-- Warning Overlay -->
+                            <div class="warning-overlay" id="warningOverlay">
+                                <div class="warning-content">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <span id="warningText">Warning!</span>
+                                </div>
+                            </div>
+
+                            <!-- Stop Overlay -->
+                            <div class="stop-overlay" id="stopOverlay">
+                                <div class="stop-content">
+                                    <i class="bi bi-sign-stop-fill"></i>
+                                    <span>VEHICLE STOPPED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Results & Telemetry -->
+                <div class="col-lg-3">
+                    <!-- Speedometer -->
+                    <div class="glass-card mb-4">
+                        <div class="card-header-custom">
+                            <i class="bi bi-speedometer"></i>
+                            <span>Speedometer</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="speedometer">
+                                <svg viewBox="0 0 200 120" class="speed-gauge">
+                                    <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100"></path>
+                                    <path class="gauge-fill" id="gaugeFill" d="M 20 100 A 80 80 0 0 1 180 100"></path>
+                                </svg>
+                                <div class="speed-display">
+                                    <span class="speed-value" id="speedValue">0</span>
+                                    <span class="speed-unit">km/h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detection Results -->
+                    <div class="glass-card results-card" id="resultsCard">
+                        <div class="card-header-custom">
+                            <i class="bi bi-graph-up"></i>
+                            <span>Detection Results</span>
+                        </div>
+                        <div class="card-body-custom">
+                            {% if result %}
+                            <div class="result-content animate-in">
+                                <div class="detected-sign {{ result.sign_type }}">
+                                    <div class="sign-icon-large">
+                                        {% if result.sign == 'no_entry' %}
+                                        <i class="bi bi-sign-stop-fill"></i>
+                                        {% elif result.sign == 'speed_limit_90' %}
+                                        <i class="bi bi-speedometer2"></i>
+                                        {% elif 'narrow' in result.sign %}
+                                        <i class="bi bi-arrows-collapse"></i>
+                                        {% elif result.sign == 'cattle' %}
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        {% elif result.sign == 'give_way' %}
+                                        <i class="bi bi-sign-yield-fill"></i>
+                                        {% elif 'turn' in result.sign %}
+                                        <i class="bi bi-sign-turn-right-fill"></i>
+                                        {% elif result.sign == 'no_overtaking' %}
+                                        <i class="bi bi-sign-no-parking-fill"></i>
+                                        {% else %}
+                                        <i class="bi bi-signpost-split"></i>
+                                        {% endif %}
+                                    </div>
+                                    <h4 class="sign-name">{{ result.sign.replace('_', ' ').title() }}</h4>
+                                </div>
+
+                                <div class="result-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Confidence</span>
+                                        <div class="confidence-bar">
+                                            <div class="confidence-fill" style="width: {{ result.confidence * 100 }}%"></div>
+                                        </div>
+                                        <span class="metric-value">{{ (result.confidence * 100)|round(1) }}%</span>
+                                    </div>
+
+                                    <div class="metric">
+                                        <span class="metric-label">Status</span>
+                                        <span class="status-badge {{ 'stopped' if result.status == 'Stopped' else 'running' if result.status == 'Running' else 'uncertain' }}">
+                                            {{ result.status }}
+                                        </span>
+                                    </div>
+
+                                    <div class="metric">
+                                        <span class="metric-label">Speed</span>
+                                        <span class="metric-value speed-metric">{{ result.speed }} km/h</span>
+                                    </div>
+                                </div>
+
+                                <div class="action-message {{ result.sign_type }}">
+                                    <i class="bi bi-info-circle"></i>
+                                    <p>{{ result.message }}</p>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="no-results">
+                                <i class="bi bi-upload"></i>
+                                <p>Upload a traffic sign to see detection results</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- System Log -->
+                    <div class="glass-card mt-4">
+                        <div class="card-header-custom">
+                            <i class="bi bi-terminal"></i>
+                            <span>System Log</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="system-log" id="systemLog">
+                                <div class="log-entry">
+                                    <span class="log-time">--:--:--</span>
+                                    <span class="log-message">System initialized</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-4 text-center py-3">
+            <p class="mb-0 text-muted">
+                <i class="bi bi-cpu me-1"></i>
+                Powered by Convolutional Neural Networks | AutoDrive AI Simulator
+            </p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // State
+        let carRunning = false;
+        let currentSpeed = 0;
+        let targetSpeed = 60;
+        let animationId = null;
+
+        // DOM Elements
+        const car = document.getElementById('car');
+        const carContainer = document.getElementById('carContainer');
+        const roadLines = document.getElementById('roadLines');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const engineStatus = document.getElementById('engineStatus');
+        const speedValue = document.getElementById('speedValue');
+        const gaugeFill = document.getElementById('gaugeFill');
+        const warningOverlay = document.getElementById('warningOverlay');
+        const stopOverlay = document.getElementById('stopOverlay');
+        const brakeLights = document.getElementById('brakeLights');
+        const systemLog = document.getElementById('systemLog');
+
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Log message
+        function addLog(message) {
+            const now = new Date();
+            const time = now.toTimeString().split(' ')[0];
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">${time}</span><span class="log-message">${message}</span>`;
+            systemLog.insertBefore(entry, systemLog.firstChild);
+            if (systemLog.children.length > 10) {
+                systemLog.removeChild(systemLog.lastChild);
+            }
+        }
+
+        // Start car
+        function startCar() {
+            if (carRunning) return;
+            carRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            engineStatus.classList.add('running');
+            engineStatus.querySelector('.status-text').textContent = 'Engine Running';
+            car.classList.add('running');
+            roadLines.classList.add('moving');
+            carContainer.classList.add('active');
+            
+            addLog('Engine started');
+            animateSpeed();
+        }
+
+        // Stop car
+        function stopCar() {
+            carRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            engineStatus.classList.remove('running');
+            engineStatus.querySelector('.status-text').textContent = 'Engine Off';
+            car.classList.remove('running');
+            roadLines.classList.remove('moving');
+            carContainer.classList.remove('active');
+            brakeLights.classList.add('active');
+            
+            setTimeout(() => brakeLights.classList.remove('active'), 1000);
+            targetSpeed = 0;
+            addLog('Engine stopped');
+        }
+
+        // Animate speed
+        function animateSpeed() {
+            if (currentSpeed < targetSpeed) {
+                currentSpeed = Math.min(currentSpeed + 2, targetSpeed);
+            } else if (currentSpeed > targetSpeed) {
+                currentSpeed = Math.max(currentSpeed - 3, targetSpeed);
+            }
+            
+            updateSpeedometer(currentSpeed);
+            updateRoadSpeed(currentSpeed);
+
+            if (carRunning || currentSpeed > 0) {
+                requestAnimationFrame(animateSpeed);
+            }
+        }
+
+        // Update speedometer
+        function updateSpeedometer(speed) {
+            speedValue.textContent = Math.round(speed);
+            const percentage = speed / 120;
+            const dashOffset = 251 * (1 - percentage);
+            gaugeFill.style.strokeDashoffset = dashOffset;
+            
+            // Color based on speed
+            if (speed > 90) {
+                gaugeFill.style.stroke = '#ef4444';
+            } else if (speed > 60) {
+                gaugeFill.style.stroke = '#f59e0b';
+            } else {
+                gaugeFill.style.stroke = '#10b981';
+            }
+        }
+
+        // Update road animation speed
+        function updateRoadSpeed(speed) {
+            const duration = speed > 0 ? Math.max(0.2, 2 - (speed / 60)) : 2;
+            roadLines.style.animationDuration = duration + 's';
+        }
+
+        // File upload handling
+        const dropZone = document.getElementById('dropZone');
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        dropZone.addEventListener('click', () => imageInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageInput.files = files;
+                showPreview(files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                showPreview(e.target.files[0]);
+            }
+        });
+
+        function showPreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                dropZone.querySelector('.upload-content').style.display = 'none';
+                previewContainer.style.display = 'flex';
+                analyzeBtn.disabled = false;
+                addLog('Image uploaded: ' + file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            imageInput.value = '';
+            imagePreview.src = '';
+            dropZone.querySelector('.upload-content').style.display = 'flex';
+            previewContainer.style.display = 'none';
+            analyzeBtn.disabled = true;
+        }
+
+        // Handle results from server
+        {% if result %}
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start car automatically if there are results
+            if (!carRunning) {
+                startCar();
+            }
+
+            const sign = "{{ result.sign }}";
+            const status = "{{ result.status }}";
+            const speed = {{ result.speed }};
+            const message = "{{ result.message }}";
+            const signType = "{{ result.sign_type }}";
+
+            addLog('Sign detected: ' + sign.replace('_', ' '));
+            addLog('Action: ' + message);
+
+            // Update target speed
+            targetSpeed = speed;
+
+            // Show appropriate overlays
+            if (status === 'Stopped') {
+                stopOverlay.classList.add('active');
+                brakeLights.classList.add('active');
+                car.classList.remove('running');
+                car.classList.add('stopped');
+                roadLines.classList.remove('moving');
+                addLog('Vehicle stopped - No entry detected');
+            } else if (signType === 'warning') {
+                warningOverlay.classList.add('active');
+                document.getElementById('warningText').textContent = message;
+                setTimeout(() => warningOverlay.classList.remove('active'), 3000);
+            }
+
+            // Handle turn signals
+            if (sign.includes('left_turn')) {
+                document.getElementById('turnLeft').classList.add('active');
+            } else if (sign.includes('right_turn')) {
+                document.getElementById('turnRight').classList.add('active');
+            }
+
+            // Update sign post
+            const signBoard = document.getElementById('signBoard');
+            signBoard.classList.add('detected');
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
