@@ -748,7 +748,7 @@ in the Software without restriction...
 </p>
 
 <p align="center">
-  Made with ❤️ and ☕ by <a href="https://github.com/yourusername">DINRAJ K DINESH</a>
+  Made with ❤️ and ☕ by <a href="https://github.com/dinraj910">DINRAJ K DINESH</a>
 </p>
 
 <!-- Animated Footer -->
