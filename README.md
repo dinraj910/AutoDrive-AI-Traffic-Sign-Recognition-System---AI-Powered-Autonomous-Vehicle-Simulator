@@ -371,6 +371,7 @@ pillow>=9.0.0
 </p>
 
 <p align="center">
+  <video src="screenshots/demo.mp4"></video>
   <a href="screenshots/demo.mp4">
     <img src="https://img.shields.io/badge/▶️_Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo"/>
   </a>
