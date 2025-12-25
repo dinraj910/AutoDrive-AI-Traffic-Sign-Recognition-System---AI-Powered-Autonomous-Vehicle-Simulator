@@ -5,9 +5,9 @@
 
 <!-- Typing Animation -->
 <p align="center">
-  <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&repeat=true&width=600&height=100&lines=🤖+AI-Powered+Autonomous+Vehicle+Simulator;🎯+Real-Time+Traffic+Sign+Detection;⚡+CNN+Deep+Learning+Architecture;🚀+Experience+the+Future+of+Driving" alt="Typing SVG" />
-  </a>
+  <h2><span id="text">🤖 AI-Powered Autonomous Vehicle Simulator
+🎯 Real-Time Traffic Sign Detection
+⚡ CNN Deep Learning Architecture</span></h2>
 </p>
 
 <!-- Badges Row 1 - Status -->
