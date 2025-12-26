@@ -371,13 +371,6 @@ pillow>=9.0.0
 </p>
 
 <p align="center">
-  <video src="screenshots/demo.mp4"></video>
-  <a href="screenshots/demo.mp4">
-    <img src="https://img.shields.io/badge/▶️_Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo"/>
-  </a>
-</p>
-
-<p align="center">
   <video src="screenshots/demo.mp4" controls width="80%">
     Your browser does not support the video tag.
   </video>
@@ -395,44 +388,20 @@ https://github.com/user-attachments/assets/demo.mp4
   <b>🖼️ Visual Tour of AutoDrive AI</b>
 </p>
 
-<table align="center">
-<tr>
-<td align="center" width="50%">
-<b>🏠 Screenshot 1</b>
-<br><br>
-<img src="screenshots/1.png" alt="Screenshot 1" width="100%"/>
-</td>
-<td align="center" width="50%">
-<b>🚗 Screenshot 2</b>
-<br><br>
-<img src="screenshots/2.png" alt="Screenshot 2" width="100%"/>
-</td>
-</tr>
-<tr>
-<td align="center">
-<b>📊 Screenshot 3</b>
-<br><br>
-<img src="screenshots/3.png" alt="Screenshot 3" width="100%"/>
-</td>
-<td align="center">
-<b>⚠️ Screenshot 4</b>
-<br><br>
-<img src="screenshots/4.png" alt="Screenshot 4" width="100%"/>
-</td>
-</tr>
-<tr>
-<td align="center">
-<b>🎯 Screenshot 5</b>
-<br><br>
-<img src="screenshots/5.png" alt="Screenshot 5" width="100%"/>
-</td>
-<td align="center">
-<b>✨ Screenshot 6</b>
-<br><br>
-<img src="screenshots/6.png" alt="Screenshot 6" width="100%"/>
-</td>
-</tr>
-</table>
+![alt text](screenshots/1.png)
+
+![alt text](screenshots/2.png)
+
+![alt text](screenshots/3.png)
+
+![alt text](screenshots/4.png)
+
+![alt text](screenshots/5.png)
+
+![alt text](screenshots/6.png)
+
+![alt text](screenshots/7.png)
+
 
 ---
 

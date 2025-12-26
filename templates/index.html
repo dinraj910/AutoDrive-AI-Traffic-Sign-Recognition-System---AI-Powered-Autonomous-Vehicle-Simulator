@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoDrive AI - Traffic Sign Recognition</title>
+    <title>Traffic Sign Recognition - CNN Detection System</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Professional Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -21,15 +21,15 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <i class="bi bi-car-front-fill me-2 text-primary"></i>
-                <span class="brand-text">AutoDrive<span class="text-primary">AI</span></span>
+                <i class="bi bi-signpost-split me-2 text-primary"></i>
+                <span class="brand-text">Traffic Sign <span class="text-primary">Recognition</span></span>
             </a>
             <div class="nav-info d-flex align-items-center">
                 <span class="badge bg-success me-3 pulse-badge">
-                    <i class="bi bi-circle-fill me-1"></i> System Online
+                    <i class="bi bi-circle-fill me-1"></i> Online
                 </span>
                 <span class="text-light opacity-75">
-                    <i class="bi bi-cpu me-1"></i> CNN Model Active
+                    <i class="bi bi-cpu me-1"></i> CNN Model
                 </span>
             </div>
         </div>
@@ -40,111 +40,23 @@
         <!-- Header Section -->
         <header class="text-center py-4">
             <h1 class="main-title">
-                <span class="title-icon"><i class="bi bi-robot"></i></span>
-                Autonomous Vehicle Simulator
+                <span class="title-icon"><i class="bi bi-signpost-2"></i></span>
+                Traffic Sign Detection System
             </h1>
-            <p class="subtitle">Experience AI-Powered Traffic Sign Recognition in Real-Time</p>
+            <p class="subtitle">CNN-based recognition with real-time vehicle simulation</p>
         </header>
 
-        <!-- Dashboard Grid -->
+        <!-- Dashboard Grid - Reorganized Layout -->
         <div class="container-fluid px-4">
-            <div class="row g-4">
-                <!-- Left Panel - Controls & Upload -->
-                <div class="col-lg-4">
-                    <!-- Control Panel -->
-                    <div class="glass-card mb-4">
-                        <div class="card-header-custom">
-                            <i class="bi bi-gear-wide-connected"></i>
-                            <span>Vehicle Control</span>
-                        </div>
-                        <div class="card-body-custom">
-                            <div class="control-buttons">
-                                <button id="startBtn" class="btn-control btn-start" onclick="startCar()">
-                                    <i class="bi bi-play-fill"></i>
-                                    <span>START ENGINE</span>
-                                </button>
-                                <button id="stopBtn" class="btn-control btn-stop" onclick="stopCar()" disabled>
-                                    <i class="bi bi-stop-fill"></i>
-                                    <span>STOP</span>
-                                </button>
-                            </div>
-                            <div class="engine-status mt-3">
-                                <div class="status-indicator" id="engineStatus">
-                                    <span class="status-dot"></span>
-                                    <span class="status-text">Engine Off</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Upload Panel -->
-                    <div class="glass-card">
-                        <div class="card-header-custom">
-                            <i class="bi bi-cloud-arrow-up"></i>
-                            <span>Traffic Sign Scanner</span>
-                        </div>
-                        <div class="card-body-custom">
-                            <form method="POST" enctype="multipart/form-data" id="uploadForm">
-                                <div class="upload-zone" id="dropZone">
-                                    <div class="upload-content">
-                                        <i class="bi bi-signpost-2 upload-icon"></i>
-                                        <p class="upload-text">Drop traffic sign here</p>
-                                        <p class="upload-subtext">or click to browse</p>
-                                        <input type="file" name="image" id="imageInput" accept="image/*" required hidden>
-                                    </div>
-                                    <div class="upload-preview" id="previewContainer" style="display: none;">
-                                        <img id="imagePreview" src="" alt="Preview">
-                                        <button type="button" class="btn-remove" onclick="removeImage()">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn-analyze" id="analyzeBtn" disabled>
-                                    <i class="bi bi-cpu"></i>
-                                    <span>ANALYZE SIGN</span>
-                                    <div class="btn-glow"></div>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Sign Legend -->
-                    <div class="glass-card mt-4">
-                        <div class="card-header-custom">
-                            <i class="bi bi-info-circle"></i>
-                            <span>Recognized Signs</span>
-                        </div>
-                        <div class="card-body-custom">
-                            <div class="sign-legend">
-                                <div class="legend-item warning">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                    <span>Cattle, Narrow Road/Bridge</span>
-                                </div>
-                                <div class="legend-item danger">
-                                    <i class="bi bi-sign-stop-fill"></i>
-                                    <span>No Entry</span>
-                                </div>
-                                <div class="legend-item info">
-                                    <i class="bi bi-arrow-left-right"></i>
-                                    <span>Give Way, Turn Restrictions</span>
-                                </div>
-                                <div class="legend-item success">
-                                    <i class="bi bi-speedometer2"></i>
-                                    <span>Speed Limit 90</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Center Panel - Road & Car Animation -->
-                <div class="col-lg-5">
+            <!-- Top Row - Simulation (Full Width) -->
+            <div class="row g-3 mb-3">
+                <div class="col-12">
                     <div class="glass-card road-card">
                         <div class="card-header-custom">
-                            <i class="bi bi-broadcast"></i>
-                            <span>Live Simulation</span>
+                            <i class="bi bi-car-front"></i>
+                            <span>Vehicle Simulation</span>
                             <span class="live-indicator">
-                                <span class="live-dot"></span> LIVE
+                                <span class="live-dot"></span> Active
                             </span>
                         </div>
                         <div class="simulation-container">
@@ -237,14 +149,43 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Right Panel - Results & Telemetry -->
-                <div class="col-lg-3">
-                    <!-- Speedometer -->
-                    <div class="glass-card mb-4">
+            <!-- Bottom Row - Controls, Upload, Results, Telemetry -->
+            <div class="row g-3">
+                <!-- Left Column - Controls & Upload -->
+                <div class="col-lg-3 col-md-6">
+                    <!-- Control Panel -->
+                    <div class="glass-card mb-3">
                         <div class="card-header-custom">
-                            <i class="bi bi-speedometer"></i>
-                            <span>Speedometer</span>
+                            <i class="bi bi-sliders"></i>
+                            <span>Control Panel</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="control-buttons">
+                                <button id="startBtn" class="btn-control btn-start" onclick="startCar()">
+                                    <i class="bi bi-play-fill"></i>
+                                    <span>Start</span>
+                                </button>
+                                <button id="stopBtn" class="btn-control btn-stop" onclick="stopCar()" disabled>
+                                    <i class="bi bi-stop-fill"></i>
+                                    <span>Stop</span>
+                                </button>
+                            </div>
+                            <div class="engine-status mt-3">
+                                <div class="status-indicator" id="engineStatus">
+                                    <span class="status-dot"></span>
+                                    <span class="status-text">Engine Off</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speedometer -->
+                    <div class="glass-card">
+                        <div class="card-header-custom">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Speed</span>
                         </div>
                         <div class="card-body-custom">
                             <div class="speedometer">
@@ -259,11 +200,76 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <!-- Second Column - Upload -->
+                <div class="col-lg-3 col-md-6">
+                    <!-- Upload Panel -->
+                    <div class="glass-card mb-3">
+                        <div class="card-header-custom">
+                            <i class="bi bi-upload"></i>
+                            <span>Upload Image</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                                <div class="upload-zone" id="dropZone">
+                                    <div class="upload-content">
+                                        <i class="bi bi-image upload-icon"></i>
+                                        <p class="upload-text">Drop image here</p>
+                                        <p class="upload-subtext">or click to select</p>
+                                        <input type="file" name="image" id="imageInput" accept="image/*" required hidden>
+                                    </div>
+                                    <div class="upload-preview" id="previewContainer" style="display: none;">
+                                        <img id="imagePreview" src="" alt="Preview">
+                                        <button type="button" class="btn-remove" onclick="removeImage()">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-analyze" id="analyzeBtn" disabled>
+                                    <i class="bi bi-search"></i>
+                                    <span>Detect Sign</span>
+                                    <div class="btn-glow"></div>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sign Legend -->
+                    <div class="glass-card">
+                        <div class="card-header-custom">
+                            <i class="bi bi-list-check"></i>
+                            <span>Sign Types</span>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="sign-legend">
+                                <div class="legend-item warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <span>Warning</span>
+                                </div>
+                                <div class="legend-item danger">
+                                    <i class="bi bi-sign-stop-fill"></i>
+                                    <span>Prohibited</span>
+                                </div>
+                                <div class="legend-item info">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                    <span>Regulatory</span>
+                                </div>
+                                <div class="legend-item success">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Speed Limit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third Column - Detection Results -->
+                <div class="col-lg-4 col-md-6">
                     <!-- Detection Results -->
                     <div class="glass-card results-card" id="resultsCard">
                         <div class="card-header-custom">
-                            <i class="bi bi-graph-up"></i>
+                            <i class="bi bi-cpu"></i>
                             <span>Detection Results</span>
                         </div>
                         <div class="card-body-custom">
@@ -327,9 +333,12 @@
                             {% endif %}
                         </div>
                     </div>
+                </div>
 
+                <!-- Fourth Column - System Log -->
+                <div class="col-lg-2 col-md-6">
                     <!-- System Log -->
-                    <div class="glass-card mt-4">
+                    <div class="glass-card">
                         <div class="card-header-custom">
                             <i class="bi bi-terminal"></i>
                             <span>System Log</span>
@@ -338,7 +347,7 @@
                             <div class="system-log" id="systemLog">
                                 <div class="log-entry">
                                     <span class="log-time">--:--:--</span>
-                                    <span class="log-message">System initialized</span>
+                                    <span class="log-message">System ready</span>
                                 </div>
                             </div>
                         </div>
@@ -350,8 +359,8 @@
         <!-- Footer -->
         <footer class="mt-4 text-center py-3">
             <p class="mb-0 text-muted">
-                <i class="bi bi-cpu me-1"></i>
-                Powered by Convolutional Neural Networks | AutoDrive AI Simulator
+                <i class="bi bi-shield-check me-1"></i>
+                Traffic Sign Recognition System | CNN-based Detection
             </p>
         </footer>
     </div>
@@ -381,18 +390,9 @@
         const brakeLights = document.getElementById('brakeLights');
         const systemLog = document.getElementById('systemLog');
 
-        // Initialize particles
+        // Initialize particles - disabled for professional theme
         function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                container.appendChild(particle);
-            }
+            // Particles disabled for cleaner look
         }
         createParticles();
 
